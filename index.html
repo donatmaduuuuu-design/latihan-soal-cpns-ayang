@@ -3,63 +3,99 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kuis TIU CPNS - Kuantitatif</title>
+  <title>Kuis TIU CPNS - Kemampuan Kuantitatif</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 0 15px; background-color: #f4f6f9; color: #333; }
-    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    h1 { text-align: center; color: #2c3e50; }
-    .question { font-weight: bold; margin-bottom: 15px; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; margin: 20px auto; padding: 0 15px; background-color: #f4f6f9; color: #333; line-height: 1.6; }
+    .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    h1 { text-align: center; color: #2c3e50; margin-bottom: 25px; }
+    .question { font-weight: 600; font-size: 16px; margin-bottom: 15px; color: #1a252f; }
     .options { list-style-type: none; padding: 0; }
     .options li { margin-bottom: 10px; }
-    .btn-option { width: 100%; text-align: left; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background: #fff; cursor: pointer; font-size: 15px; }
-    .btn-option:hover { background-color: #eef2f5; }
-    .btn-option.correct { background-color: #27ae60 !important; color: white; border-color: #27ae60; }
-    .btn-option.wrong { background-color: #e74c3c !important; color: white; border-color: #e74c3c; }
-    .explanation { margin-top: 10px; padding: 10px; background: #eef7fe; border-left: 4px solid #3498db; display: none; }
-    #result-box { text-align: center; display: none; }
-    .score { font-size: 24px; font-weight: bold; color: #2c3e50; }
-    .btn-submit { display: block; width: 100%; padding: 12px; background: #2980b9; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
-    .btn-submit:hover { background: #1c5980; }
+    .btn-option { width: 100%; text-align: left; padding: 12px 15px; border: 1px solid #dcdfe6; border-radius: 6px; background: #fff; cursor: pointer; font-size: 15px; transition: all 0.2s; }
+    .btn-option:hover { background-color: #ecf5ff; border-color: #c6e2ff; }
+    .btn-option.correct { background-color: #67c23a !important; color: white; border-color: #67c23a; font-weight: bold; }
+    .btn-option.wrong { background-color: #f56c6c !important; color: white; border-color: #f56c6c; }
+    .explanation { margin-top: 15px; padding: 12px; background: #eef7fe; border-left: 4px solid #409eff; border-radius: 4px; display: none; font-size: 14px; }
+    #result-box { text-align: center; display: none; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .score { font-size: 28px; font-weight: bold; color: #2c3e50; margin: 15px 0; }
+    .btn-submit { display: block; width: 100%; padding: 15px; background: #409eff; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 20px; }
+    .btn-submit:hover { background: #66b1ff; }
   </style>
 </head>
 <body>
 
-  <h1>Kuis TIU CPNS: Kemampuan Kuantitatif</h1>
+  <h1>Latihan Soal TIU CPNS: Kuantitatif</h1>
   <div id="quiz-container"></div>
 
   <button class="btn-submit" onclick="calculateScore()">Selesai & Lihat Total Skor</button>
 
-  <div id="result-box" class="card" style="margin-top: 20px;">
-    <h2>Hasil Kuis Anda</h2>
-    <div class="score" id="score-text">0 / 100</div>
-    <p id="feedback-text"></p>
+  <div id="result-box" class="card" style="margin-top: 25px;">
+    <h2>Hasil Akhir Kuis</h2>
+    <div class="score" id="score-text">0 / 50</div>
+    <p id="details-text" style="font-size: 16px; color: #606266;"></p>
   </div>
 
   <script>
     const questions = [
       {
-        q: "1. Budi berkendara dari kota X ke Y (240 km). 1,5 jam pertama kecepatannya 60 km/jam, lalu istirahat 15 menit, dan lanjut dengan kecepatan 75 km/jam hingga wib di Y. Total waktu perjalanan adalah...",
+        q: "1. Budi berkendara dari kota X ke Y (240 km). 1,5 jam pertama kecepatannya 60 km/jam, lalu istirahat 15 menit, dan lanjut dengan kecepatan 75 km/jam hingga tiba di Y. Total waktu perjalanan Budi adalah...",
         options: ["A. 3,5 jam", "B. 3,75 jam", "C. 4 jam", "D. 4,25 jam", "E. 4,5 jam"],
-        answer: 1, // B (indeks dimulai dari 0)
-        exp: "Jarak awal = 60 x 1,5 = 90 km. Sisa jarak = 240 - 90 = 150 km. Waktu sisa = 150 / 75 = 2 jam. Istirahat = 0,25 jam. Total = 1,5 + 0,25 + 2 = 3,75 jam."
+        answer: 1,
+        exp: "Jarak awal = 60 x 1,5 = 90 km. Sisa jarak = 240 - 90 = 150 km. Waktu sisa = 150 / 75 = 2 jam. Istirahat = 0,25 jam (15 menit). Total waktu = 1,5 + 0,25 + 2 = 3,75 jam."
       },
       {
-        q: "2. 8 orang pekerja dapat menyelesaikan 40% proyek dalam 6 hari. Jika proyek ingin selesai 100% dalam total waktu 15 hari, berapa tambahan pekerja yang dibutuhkan?",
+        q: "2. Mobil berangkat dari A ke B pukul 08.00 berkecepatan 80 km/jam. Motor berangkat dari B ke A pada waktu bersamaan berkecepatan 60 km/jam. Jika jarak A-B adalah 280 km, pukul berapa mereka berpapasan?",
+        options: ["A. 09.30", "B. 10.00", "C. 10.15", "D. 10.30", "E. 11.00"],
+        answer: 1,
+        exp: "Waktu berpapasan = Jarak Total / (v1 + v2) = 280 / (80 + 60) = 280 / 140 = 2 jam. Berpapasan pada pukul 08.00 + 2 jam = 10.00."
+      },
+      {
+        q: "3. Andi berangkat pukul 07.00 berkecepatan 50 km/jam. Boni menyusul dari tempat sama pukul 07.30 berkecepatan 75 km/jam. Pada pukul berapa Boni berhasil menyusul Andi?",
+        options: ["A. 08.00", "B. 08.15", "C. 08.30", "D. 08.45", "E. 09.00"],
+        answer: 2,
+        exp: "Selisih jarak = 50 x 0,5 jam = 25 km. Waktu menyusul = Selisih Jarak / (v2 - v1) = 25 / (75 - 50) = 1 jam. Menyusul pukul 07.30 + 1 jam = 08.30."
+      },
+      {
+        q: "4. 8 orang pekerja dapat menyelesaikan 40% proyek dalam 6 hari. Jika proyek ingin diselesaikan 100% dalam total waktu 15 hari, berapa pekerja tambahan yang dibutuhkan?",
         options: ["A. 2 orang", "B. 3 orang", "C. 4 orang", "D. 5 orang", "E. 6 orang"],
-        answer: 0, // A
-        exp: "Sisa pekerjaan 60% dalam 9 hari. Butuh total 10 pekerja. Tambahan = 10 - 8 = 2 orang."
+        answer: 0,
+        exp: "Sisa pekerjaan 60% harus selesai dalam 9 hari sisa. Dengan rumus beban kerja, butuh total 10 pekerja. Tambahan pekerja = 10 - 8 = 2 orang."
       },
       {
-        q: "3. Biaya sewa ruko Rp18.000.000 per tahun. Jika Pak Dedi menyewa selama 7 bulan, biaya sewanya adalah...",
+        q: "5. Suatu pekerjaan diselesaikan 12 orang dalam 20 hari. Setelah bekerja 5 hari, pekerjaan terhenti 3 hari. Agar selesai tepat waktu, berapa pekerja tambahan yang harus ditambah?",
+        options: ["A. 2 orang", "B. 3 orang", "C. 4 orang", "D. 5 orang", "E. 6 orang"],
+        answer: 1,
+        exp: "Sisa hari normal = 15 hari. Sisa hari setelah libur = 12 hari. Pakai perbandingan berbalik nilai: (12 orang x 15 hari) / 12 hari = 15 orang. Pekerja tambahan = 15 - 12 = 3 orang."
+      },
+      {
+        q: "6. Sebuah peternakan punya persediaan pakan cukup untuk 50 ekor sapi selama 18 hari. Jika peternak membeli 10 ekor sapi lagi, berapa hari pakan tersebut akan habis?",
+        options: ["A. 12 hari", "B. 14 hari", "C. 15 hari", "D. 16 hari", "E. 17 hari"],
+        answer: 2,
+        exp: "Perbandingan berbalik nilai: (50 sapi x 18 hari) / 60 sapi = 15 hari."
+      },
+      {
+        q: "7. Biaya sewa sebuah ruko adalah Rp18.000.000,00 per tahun. Jika Pak Dedi menyewa selama 7 bulan saja, berapakah biaya sewa proporsional yang harus dibayar?",
         options: ["A. Rp9.500.000", "B. Rp10.200.000", "C. Rp10.500.000", "D. Rp11.000.000", "E. Rp11.500.000"],
-        answer: 2, // C
-        exp: "Biaya = (7 / 12) x 18.000.000 = Rp10.500.000."
+        answer: 2,
+        exp: "Biaya = (7 / 12) x Rp18.000.000 = Rp10.500.000."
       },
       {
-        q: "4. Diketahui A = Jumlah buku dalam 15 dus (setiap dus 4 lusin), B = 720 buku. Hubungan A dan B adalah...",
+        q: "8. Sewa langganan internet Rp360.000 untuk 30 hari. Jika pelanggan menghentikan layanan setelah pemakaian 18 hari, berapakah sisa uang langganan yang dikembalikan?",
+        options: ["A. Rp120.000", "B. Rp144.000", "C. Rp180.000", "D. Rp216.000", "E. Rp240.000"],
+        answer: 1,
+        exp: "Sisa hari = 30 - 18 = 12 hari. Pengembalian = (12 / 30) x Rp360.000 = Rp144.000."
+      },
+      {
+        q: "9. Diketahui A = Jumlah buku dalam 15 dus (setiap dus berisi 4 lusin buku), dan B = 720 buku. Manakah pernyataan yang benar?",
         options: ["A. A > B", "B. A < B", "C. A = B", "D. 2A = 3B", "E. A + B = 1000"],
-        answer: 2, // C
-        exp: "A = 15 x 4 x 12 = 720. B = 720. Maka A = B."
+        answer: 2,
+        exp: "1 lusin = 12 buah. Maka A = 15 x 4 x 12 = 720 buku. Nilai B = 720 buku. Sehingga A = B."
+      },
+      {
+        q: "10. Diketahui x = 3 dan y = -2. Jika A = (x + y)^2 dan B = x^2 - y^2, manakah hubungan kuantitatif yang benar?",
+        options: ["A. A > B", "B. A < B", "C. A = B", "D. A = 2B", "E. Hubungan tidak dapat ditentukan"],
+        answer: 1,
+        exp: "A = (3 + (-2))^2 = (1)^2 = 1. Nilai B = 3^2 - (-2)^2 = 9 - 4 = 5. Karena 1 < 5, maka A < B."
       }
     ];
 
@@ -90,12 +126,11 @@
     }
 
     function selectAnswer(qIndex, optIndex) {
-      if (userAnswers[qIndex] !== undefined) return; // Kunci agar tidak bisa diganti setelah diklik
+      if (userAnswers[qIndex] !== undefined) return;
 
       userAnswers[qIndex] = optIndex;
       const correctIndex = questions[qIndex].answer;
 
-      // Warnai tombol pilihan
       const selectedBtn = document.getElementById(`opt-${qIndex}-${optIndex}`);
       if (optIndex === correctIndex) {
         selectedBtn.classList.add('correct');
@@ -104,7 +139,6 @@
         document.getElementById(`opt-${qIndex}-${correctIndex}`).classList.add('correct');
       }
 
-      // Tampilkan pembahasan langsung
       document.getElementById(`exp-${qIndex}`).style.display = 'block';
     }
 
@@ -116,9 +150,12 @@
         }
       });
 
-      const totalScore = correctCount * 5; // Poin 5 per soal
+      const totalScore = correctCount * 5; 
+      const maxScore = questions.length * 5;
+      
       document.getElementById('result-box').style.display = 'block';
-      document.getElementById('score-text').innerText = `Skor Anda: ${totalScore} (Benar ${correctCount} dari ${questions.length} soal)`;
+      document.getElementById('score-text').innerText = `Skor Anda: ${totalScore} / ${maxScore}`;
+      document.getElementById('details-text').innerText = `Anda menjawab benar ${correctCount} dari total ${questions.length} soal (Poin per soal: 5, Salah: 0).`;
       
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
