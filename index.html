@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis TIU CPNS - Kuantitatif</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 0 15px; background-color: #f4f6f9; color: #333; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    h1 { text-align: center; color: #2c3e50; }
+    .question { font-weight: bold; margin-bottom: 15px; }
+    .options { list-style-type: none; padding: 0; }
+    .options li { margin-bottom: 10px; }
+    .btn-option { width: 100%; text-align: left; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background: #fff; cursor: pointer; font-size: 15px; }
+    .btn-option:hover { background-color: #eef2f5; }
+    .btn-option.correct { background-color: #27ae60 !important; color: white; border-color: #27ae60; }
+    .btn-option.wrong { background-color: #e74c3c !important; color: white; border-color: #e74c3c; }
+    .explanation { margin-top: 10px; padding: 10px; background: #eef7fe; border-left: 4px solid #3498db; display: none; }
+    #result-box { text-align: center; display: none; }
+    .score { font-size: 24px; font-weight: bold; color: #2c3e50; }
+    .btn-submit { display: block; width: 100%; padding: 12px; background: #2980b9; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+    .btn-submit:hover { background: #1c5980; }
+  </style>
+</head>
+<body>
+
+  <h1>Kuis TIU CPNS: Kemampuan Kuantitatif</h1>
+  <div id="quiz-container"></div>
+
+  <button class="btn-submit" onclick="calculateScore()">Selesai & Lihat Total Skor</button>
+
+  <div id="result-box" class="card" style="margin-top: 20px;">
+    <h2>Hasil Kuis Anda</h2>
+    <div class="score" id="score-text">0 / 100</div>
+    <p id="feedback-text"></p>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "1. Budi berkendara dari kota X ke Y (240 km). 1,5 jam pertama kecepatannya 60 km/jam, lalu istirahat 15 menit, dan lanjut dengan kecepatan 75 km/jam hingga wib di Y. Total waktu perjalanan adalah...",
+        options: ["A. 3,5 jam", "B. 3,75 jam", "C. 4 jam", "D. 4,25 jam", "E. 4,5 jam"],
+        answer: 1, // B (indeks dimulai dari 0)
+        exp: "Jarak awal = 60 x 1,5 = 90 km. Sisa jarak = 240 - 90 = 150 km. Waktu sisa = 150 / 75 = 2 jam. Istirahat = 0,25 jam. Total = 1,5 + 0,25 + 2 = 3,75 jam."
+      },
+      {
+        q: "2. 8 orang pekerja dapat menyelesaikan 40% proyek dalam 6 hari. Jika proyek ingin selesai 100% dalam total waktu 15 hari, berapa tambahan pekerja yang dibutuhkan?",
+        options: ["A. 2 orang", "B. 3 orang", "C. 4 orang", "D. 5 orang", "E. 6 orang"],
+        answer: 0, // A
+        exp: "Sisa pekerjaan 60% dalam 9 hari. Butuh total 10 pekerja. Tambahan = 10 - 8 = 2 orang."
+      },
+      {
+        q: "3. Biaya sewa ruko Rp18.000.000 per tahun. Jika Pak Dedi menyewa selama 7 bulan, biaya sewanya adalah...",
+        options: ["A. Rp9.500.000", "B. Rp10.200.000", "C. Rp10.500.000", "D. Rp11.000.000", "E. Rp11.500.000"],
+        answer: 2, // C
+        exp: "Biaya = (7 / 12) x 18.000.000 = Rp10.500.000."
+      },
+      {
+        q: "4. Diketahui A = Jumlah buku dalam 15 dus (setiap dus 4 lusin), B = 720 buku. Hubungan A dan B adalah...",
+        options: ["A. A > B", "B. A < B", "C. A = B", "D. 2A = 3B", "E. A + B = 1000"],
+        answer: 2, // C
+        exp: "A = 15 x 4 x 12 = 720. B = 720. Maka A = B."
+      }
+    ];
+
+    let userAnswers = {};
+
+    function loadQuiz() {
+      const container = document.getElementById('quiz-container');
+      questions.forEach((q, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="question">${q.q}</div>
+          <ul class="options">
+            ${q.options.map((opt, optIndex) => `
+              <li>
+                <button class="btn-option" id="opt-${index}-${optIndex}" onclick="selectAnswer(${index}, ${optIndex})">
+                  ${opt}
+                </button>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="explanation" id="exp-${index}">
+            <strong>Pembahasan:</strong> ${q.exp}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectAnswer(qIndex, optIndex) {
+      if (userAnswers[qIndex] !== undefined) return; // Kunci agar tidak bisa diganti setelah diklik
+
+      userAnswers[qIndex] = optIndex;
+      const correctIndex = questions[qIndex].answer;
+
+      // Warnai tombol pilihan
+      const selectedBtn = document.getElementById(`opt-${qIndex}-${optIndex}`);
+      if (optIndex === correctIndex) {
+        selectedBtn.classList.add('correct');
+      } else {
+        selectedBtn.classList.add('wrong');
+        document.getElementById(`opt-${qIndex}-${correctIndex}`).classList.add('correct');
+      }
+
+      // Tampilkan pembahasan langsung
+      document.getElementById(`exp-${qIndex}`).style.display = 'block';
+    }
+
+    function calculateScore() {
+      let correctCount = 0;
+      questions.forEach((q, index) => {
+        if (userAnswers[index] === q.answer) {
+          correctCount++;
+        }
+      });
+
+      const totalScore = correctCount * 5; // Poin 5 per soal
+      document.getElementById('result-box').style.display = 'block';
+      document.getElementById('score-text').innerText = `Skor Anda: ${totalScore} (Benar ${correctCount} dari ${questions.length} soal)`;
+      
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    loadQuiz();
+  </script>
+</body>
+</html>
